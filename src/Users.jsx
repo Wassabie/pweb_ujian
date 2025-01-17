@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-// Ganti dengan URL backend Anda
 const API_URL = "http://localhost:8000/data.php";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
   const [editUser, setEditUser] = useState(null);
 
   const fetchUsers = async () => {
@@ -23,8 +23,8 @@ function Users() {
     e.preventDefault();
     const method = editUser ? "PUT" : "POST";
     const body = editUser
-      ? JSON.stringify({ id: editUser.id, name, email })
-      : JSON.stringify({ name, email });
+      ? JSON.stringify({ id: editUser.id, name, email, gender })
+      : JSON.stringify({ name, email, gender });
 
     try {
       await fetch(API_URL, {
@@ -34,6 +34,7 @@ function Users() {
       });
       setName("");
       setEmail("");
+      setGender("");
       setEditUser(null);
       fetchUsers();
     } catch (error) {
@@ -45,6 +46,7 @@ function Users() {
     setEditUser(user);
     setName(user.name);
     setEmail(user.email);
+    setGender(user.gender);
   };
 
   const handleDelete = async (id) => {
@@ -68,7 +70,7 @@ function Users() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-4xl w-full p-6 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          React CRUD Application
+          Daftar Mahasiswa Baru
         </h1>
         <form
           onSubmit={handleSubmit}
@@ -90,6 +92,18 @@ function Users() {
             className="flex-1 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="flex-1 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+            <option value="" disabled>
+              Select Gender
+            </option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 transition"
@@ -101,15 +115,10 @@ function Users() {
           <table className="w-full table-auto border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  ID
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  Name
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  Email
-                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Gender</th>
                 <th className="border border-gray-300 px-4 py-2 text-center">
                   Actions
                 </th>
@@ -124,12 +133,9 @@ function Users() {
                   <td className="border border-gray-300 px-4 py-2 text-center">
                     {user.id}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {user.name}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {user.email}
-                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{user.name}</td>
+                  <td className="border border-gray-300 px-4 py-2">{user.email}</td>
+                  <td className="border border-gray-300 px-4 py-2">{user.gender}</td>
                   <td className="border border-gray-300 px-4 py-2 text-center">
                     <button
                       onClick={() => handleEdit(user)}

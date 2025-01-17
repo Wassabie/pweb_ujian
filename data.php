@@ -9,15 +9,12 @@ $username = "root";
 $password = "";
 $database = "crud_example";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $database);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Parse incoming JSON data
 $input = json_decode(file_get_contents("php://input"), true);
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -25,15 +22,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === "POST") {
     $name = $input['name'];
     $email = $input['email'];
-    $stmt = $conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $email);
+    $gender = $input['gender'];
+    $stmt = $conn->prepare("INSERT INTO users (name, email, gender) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $gender);
     $stmt->execute();
 } elseif ($method === "PUT") {
     $id = $input['id'];
     $name = $input['name'];
     $email = $input['email'];
-    $stmt = $conn->prepare("UPDATE users SET name=?, email=? WHERE id=?");
-    $stmt->bind_param("ssi", $name, $email, $id);
+    $gender = $input['gender'];
+    $stmt = $conn->prepare("UPDATE users SET name=?, email=?, gender=? WHERE id=?");
+    $stmt->bind_param("sssi", $name, $email, $gender, $id);
     $stmt->execute();
 } elseif ($method === "DELETE") {
     $id = $input['id'];
@@ -41,17 +40,14 @@ if ($method === "POST") {
     $stmt->bind_param("i", $id);
     $stmt->execute();
 
-    // Reset IDs to be sequential
     $conn->query("SET @count = 0;");
     $conn->query("UPDATE users SET id = (@count := @count + 1);");
     $conn->query("ALTER TABLE users AUTO_INCREMENT = 1;");
 } else {
-    // Handle GET requests
     $result = $conn->query("SELECT * FROM users");
     $data = $result->fetch_all(MYSQLI_ASSOC);
     echo json_encode($data);
 }
 
 $conn->close();
-
 ?>

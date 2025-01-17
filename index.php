@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
 // Fetch users
 $result = $conn->query("SELECT * FROM users");
 $users = $result->fetch_all(MYSQLI_ASSOC);
@@ -52,52 +51,59 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHP MySQL CRUD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>PHP MySQL CRUD</h1>
+<body class="bg-gray-100 py-10">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow overflow-x-auto">
+        <h1 class="text-2xl font-bold mb-4">PHP MySQL CRUD</h1>
 
-    <h2>Add User</h2>
-    <form method="POST">
-        <input type="hidden" name="action" value="create">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <button type="submit">Add</button>
-    </form>
+        <h2 class="text-xl font-semibold mb-2">Add User</h2>
+        <form method="POST" class="mb-6">
+            <input type="hidden" name="action" value="create">
+            <div class="mb-4">
+                <input type="text" name="name" placeholder="Name" required class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <input type="email" name="email" placeholder="Email" required class="w-full p-2 border rounded">
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
+        </form>
 
-    <h2>Users List</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($users as $user): ?>
-                <tr>
-                    <td><?= $user['id'] ?></td>
-                    <td><?= $user['name'] ?></td>
-                    <td><?= $user['email'] ?></td>
-                    <td>
-                        <form method="POST" style="display:inline-block;">
-                            <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                            <input type="text" name="name" value="<?= $user['name'] ?>" required>
-                            <input type="email" name="email" value="<?= $user['email'] ?>" required>
-                            <button type="submit">Update</button>
-                        </form>
-                        <form method="POST" style="display:inline-block;">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                            <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
+        <h2 class="text-xl font-semibold mb-2">Users List</h2>
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 px-4 py-2">ID</th>
+                    <th class="border border-gray-300 px-4 py-2">Name</th>
+                    <th class="border border-gray-300 px-4 py-2">Email</th>
+                    <th class="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="border border-gray-300 px-4 py-2 text-center whitespace-nowrap"><?= $user['id'] ?></td>
+                        <td class="border border-gray-300 px-4 py-2 whitespace-nowrap truncate max-w-xs"><?= $user['name'] ?></td>
+                        <td class="border border-gray-300 px-4 py-2 whitespace-nowrap truncate max-w-xs"><?= $user['email'] ?></td>
+                        <td class="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                            <form method="POST" style="display:inline-block;">
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                <input type="text" name="name" value="<?= $user['name'] ?>" required class="p-1 border rounded">
+                                <input type="email" name="email" value="<?= $user['email'] ?>" required class="p-1 border rounded">
+                                <button type="submit" class="bg-yellow-500 text-white px-2 py-1 rounded">Update</button>
+                            </form>
+                            <form method="POST" style="display:inline-block;">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                <button type="submit" onclick="return confirm('Are you sure?')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
 

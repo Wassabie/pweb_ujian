@@ -33,14 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("i", $id);
         $stmt->execute();
 
-        // Check if table is empty and reset AUTO_INCREMENT
-        $result = $conn->query("SELECT COUNT(*) as total FROM users");
-        $row = $result->fetch_assoc();
-        if ($row['total'] == 0) {
-            $conn->query("ALTER TABLE users AUTO_INCREMENT = 1");
-        }
+        // Reset IDs to be sequential
+        $conn->query("SET @count = 0;");
+        $conn->query("UPDATE users SET id = (@count := @count + 1);");
+        $conn->query("ALTER TABLE users AUTO_INCREMENT = 1;");
     }
 }
+
 
 // Fetch users
 $result = $conn->query("SELECT * FROM users");

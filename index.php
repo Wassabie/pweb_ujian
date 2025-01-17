@@ -54,7 +54,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 py-10">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow overflow-x-auto">
+    <div class="max-w-8xl mx-auto bg-white p-6 rounded shadow overflow-x-auto">
         <h1 class="text-2xl font-bold mb-4">PHP MySQL CRUD</h1>
 
         <h2 class="text-xl font-semibold mb-2">Add User</h2>
